@@ -42,7 +42,7 @@ class Game:
     def __init__(self):
         self.update_bg_color()
         self.score_loss = 3
-        self.num_balls = 3
+        self.num_balls = 4
 
     def update_bg_color(self, prev=None):
         self.bg = random_bg_color(prev)
