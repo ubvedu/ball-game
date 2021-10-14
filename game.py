@@ -160,14 +160,6 @@ class Game:
         ))
 
 
-def random_near_color(i, j):
-    colors = []
-    for k in range(max(0, i - 1), min(i + 1, len(COLORS) - 1) + 1):
-        if k != j:
-            colors.append(k)
-    return random.choice(colors)
-
-
 def new_ball():
     return Ball(random_fg_color(), 0, 0, W, H)
 
