@@ -3,6 +3,7 @@ from turtle import st
 import pygame
 import random
 from ball import Ball
+from triangle import Triangle
 from sys import float_info
 import time
 
@@ -87,7 +88,7 @@ class Game:
         pygame.quit()
 
     def begin_game(self):
-        self.balls = [new_ball() for _ in range(self.num_balls)]
+        self.objects = [new_ball() for _ in range(self.num_balls)]
         self.max_score = 1000
         self.score = self.max_score
         self.game_over = False
@@ -96,8 +97,9 @@ class Game:
     def end_game(self):
         self.game_over = True
         duration = time.time() - self.start
+        save_duration(duration)
         text = self.font32.render(
-            f'Game over. Your played {round(duration, 3)}s',
+            f'Game over. Your played {format_duration(duration)}',
             True,
             self.bg_inverse,
         )
@@ -105,25 +107,25 @@ class Game:
         self.screen.blit(text, ((W - clip.w) / 2, (H - clip.h) / 2))
 
     def update_balls(self):
-        for (i, ball) in enumerate(self.balls):
+        for (i, ball) in enumerate(self.objects):
             ball.step()
             if not ball.exists():
-                self.balls[i] = new_ball()
+                self.objects[i] = new_ball()
 
     def draw_scene(self):
         self.screen.fill(self.bg)
-        for ball in self.balls:
+        for ball in self.objects:
             ball.draw(self.screen)
         self.draw_bar()
 
     def handle_click(self, event):
         add_scores = []
         nearest_dist_squared = float_info.max
-        for (i, ball) in enumerate(self.balls):
+        for (i, ball) in enumerate(self.objects):
             dist_squared = ball.dist_squared(event.pos)
             if dist_squared < ball.r ** 2:
                 add_scores.append(1 / ball.area())
-                self.balls[i] = new_ball()
+                self.objects[i] = new_ball()
             elif dist_squared < nearest_dist_squared:
                 nearest_dist_squared = dist_squared
 
@@ -170,3 +172,21 @@ def random_bg_color(without=None):
 
 def random_fg_color(without=None):
     return random.choice([c for c in fg_colors if c != without])
+
+def save_duration(score):
+    filename = 'leaderboard'
+    with open(filename, 'a'):
+        pass
+    with open(filename, 'r') as file:
+        scores = [float(line[:-2]) for line in file.readlines()]
+    scores.append(score)
+    scores.sort(reverse=True)
+    with open(filename, 'w') as file:
+        file.writelines([f'{format_duration(score)}\n' for score in scores])
+
+def format_duration(score):
+    return f'{round(score, 3)}s'
+
+
+game = Game()
+game.loop()
