@@ -186,7 +186,3 @@ def save_duration(score):
 
 def format_duration(score):
     return f'{round(score, 3)}s'
-
-
-game = Game()
-game.loop()
