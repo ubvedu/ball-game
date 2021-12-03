@@ -1,9 +1,7 @@
 import math
-from turtle import st
 import pygame
 import random
 from ball import Ball
-from triangle import Triangle
 from sys import float_info
 import time
 
